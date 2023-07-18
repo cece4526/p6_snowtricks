@@ -22,8 +22,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_user_new', methods:['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher)
+    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -36,13 +36,15 @@ class UserController extends AbstractController
                 $plaintextPassword
                 );
             $user->setPassword($hashedPassword);
+
             $userRepository->save($user, true);
+
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('user/new.html.twig', [
+        return $this->render('user/new.html.twig', [
             'user' => $user,
-            'form' => $form
+            'form' => $form->createView()
         ]);
     }
 }

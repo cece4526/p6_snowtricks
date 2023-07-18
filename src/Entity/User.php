@@ -34,8 +34,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 150)]
     private ?string $username = null;
 
-    #[ORM\Column]
-    private ?bool $isVerified = null;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isVerified = false;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
