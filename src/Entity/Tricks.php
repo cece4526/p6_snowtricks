@@ -60,7 +60,7 @@ class Tricks
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -72,7 +72,7 @@ class Tricks
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(string $slug): self
     {
         $this->slug = $slug;
 
@@ -84,7 +84,7 @@ class Tricks
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -96,7 +96,7 @@ class Tricks
         return $this->updateAt;
     }
 
-    public function setUpdateAt(\DateTimeImmutable $updateAt): static
+    public function setUpdateAt(\DateTimeImmutable $updateAt): self
     {
         $this->updateAt = $updateAt;
 
@@ -108,7 +108,7 @@ class Tricks
         return $this->mainImageName;
     }
 
-    public function setMainImageName(string $mainImageName): static
+    public function setMainImageName(string $mainImageName): self
     {
         $this->mainImageName = $mainImageName;
 
@@ -123,7 +123,7 @@ class Tricks
         return $this->comments;
     }
 
-    public function addComment(Comment $comment): static
+    public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
@@ -133,7 +133,7 @@ class Tricks
         return $this;
     }
 
-    public function removeComment(Comment $comment): static
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
@@ -150,7 +150,7 @@ class Tricks
         return $this->category;
     }
 
-    public function setCategory(?Category $category): static
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
 
@@ -165,7 +165,7 @@ class Tricks
         return $this->images;
     }
 
-    public function addImage(Image $image): static
+    public function addImage(Image $image): self
     {
         if (!$this->images->contains($image)) {
             $this->images->add($image);
@@ -175,7 +175,7 @@ class Tricks
         return $this;
     }
 
-    public function removeImage(Image $image): static
+    public function removeImage(Image $image): self
     {
         if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)
@@ -195,7 +195,7 @@ class Tricks
         return $this->videos;
     }
 
-    public function addVideo(Video $video): static
+    public function addVideo(Video $video): self
     {
         if (!$this->videos->contains($video)) {
             $this->videos->add($video);
@@ -205,7 +205,7 @@ class Tricks
         return $this;
     }
 
-    public function removeVideo(Video $video): static
+    public function removeVideo(Video $video): self
     {
         if ($this->videos->removeElement($video)) {
             // set the owning side to null (unless already changed)
