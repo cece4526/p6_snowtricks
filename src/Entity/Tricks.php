@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\TricksRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TricksRepository::class)]
 class Tricks
@@ -31,16 +33,26 @@ class Tricks
     #[ORM\Column(length: 255)]
     private ?string $mainImageName = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
     private ?Category $category = null;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class)]
+    #[ORM\OneToMany(
+        mappedBy: 'trick',
+        targetEntity: Image::class,
+        orphanRemoval: true,
+        cascade: ['persist']
+        )]
     private Collection $images;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class)]
+    #[ORM\OneToMany(
+        mappedBy: 'trick',
+        targetEntity: Video::class,
+        orphanRemoval: true,
+        cascade: ['persist']
+    )]
     private Collection $videos;
 
     public function __construct()
