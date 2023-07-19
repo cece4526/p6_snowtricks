@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['username'], message: '--  !! There is already an account with this username !!  --')]
+#[UniqueEntity(fields: ['email'], message: '-- !! There is already an account with this email address !! --')]
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -40,13 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ResetPasswordRequest::class)]
-    private Collection $resetPasswordRequests;
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->resetPasswordRequests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -88,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -103,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -124,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): static
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -136,7 +134,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): static
+    public function setIsVerified(bool $isVerified): bool
     {
         $this->isVerified = $isVerified;
 
@@ -151,7 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->comments;
     }
 
-    public function addComment(Comment $comment): static
+    public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
@@ -161,7 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeComment(Comment $comment): static
+    public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
@@ -172,35 +170,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, ResetPasswordRequest>
-     */
-    public function getResetPasswordRequests(): Collection
-    {
-        return $this->resetPasswordRequests;
-    }
-
-    public function addResetPasswordRequest(ResetPasswordRequest $resetPasswordRequest): static
-    {
-        if (!$this->resetPasswordRequests->contains($resetPasswordRequest)) {
-            $this->resetPasswordRequests->add($resetPasswordRequest);
-            $resetPasswordRequest->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeResetPasswordRequest(ResetPasswordRequest $resetPasswordRequest): static
-    {
-        if ($this->resetPasswordRequests->removeElement($resetPasswordRequest)) {
-            // set the owning side to null (unless already changed)
-            if ($resetPasswordRequest->getUser() === $this) {
-                $resetPasswordRequest->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
 }
