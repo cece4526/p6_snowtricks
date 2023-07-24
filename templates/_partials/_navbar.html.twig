@@ -1,30 +1,54 @@
 {% if app.user %}
-    <nav id="menu_dir" class="col navbar navbar-expand-lg">
-        <button id="button_menu" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
-            <span class="button">Menu</span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div id="navbarContent" class="collapse navbar-collapse menu_dir">
+        <div id="navbarContent" class="navbar-collapse ml-auto collapse">
             <ul class="navbar-nav">
-                <li class="nav-item active"><a class="nav-link bouton4" href="/logout">Déconnexion</a></li>
-                <li class="nav-item active"><a class="nav-link bouton4" href="/">Accueil</a></li>
-                <li class="nav-item active"><a class="nav-link bouton4" href="/user/profile?id={{ app.user.id }}">Profil</a></li>
-                <li class="nav-item active"><a class="nav-link bouton4" href="/tricks/new">New trick</a></li>
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/logout">Déconnexion</a></li>
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/">Accueil</a></li>
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/user/profile?id={{ app.user.id }}">Profil</a></li>
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/tricks/new">New trick</a></li>
                 {# {% if session.get('role') == 'admin' %}
-                    <li class="nav-item active"><a class="nav-link bouton4" href="../public/index.php?route=administration">Administration</a></li>
+                    <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="../public/index.php?route=administration">Administration</a></li>
                 {% endif %} #}
             </ul>
         </div>
     </nav>
 {% else %}
-    <nav id="menu_dir" class="col navbar navbar-expand-lg">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
-            <span class="button">Menu</span>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
-        <div id="navbarContent" class="collapse navbar-collapse menu_dir">
-            <ul class="navbar-nav">
-                <li class="nav-item active"><a class="nav-link bouton4" href="/inscription">Inscription</a></li>
-                <li class="nav-item active"><a class="nav-link bouton4" href="/login">Connexion</a></li>
+        <div id="navbarContent" class="navbar-collapse ml-auto collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/">Accueil</a></li>
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/inscription">Inscription</a></li>
+                <li class="nav-item mt-3 mt-lg-0"><a class="nav-link bouton4" href="/login">Connexion</a></li>
             </ul>
         </div>
     </nav>
 {% endif %}
+
+{# <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+            <a class="navbar-brand" href="/"><img class="logo" src="/images/logo.png" alt="Logo"></a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse ml-auto collapse" id="navbarColor01" style="">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item mt-3 mt-lg-0">
+                        <a class="nav-link" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#tricks">Tricks</a>
+                    </li>
+                                            <li class="nav-item">
+                            <a class="nav-link" href="/login">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Inscription</a>
+                        </li>
+                                    </ul>
+            </div>
+        </nav> #}

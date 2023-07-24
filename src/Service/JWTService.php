@@ -3,9 +3,6 @@
 namespace App\Service;
 
 use DateTimeImmutable;
-use phpDocumentor\Reflection\Types\Boolean;
-
-use function Symfony\Component\Clock\now;
 
 class JWTService
 {

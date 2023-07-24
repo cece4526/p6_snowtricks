@@ -32,6 +32,9 @@ class Tricks
     #[ORM\Column(length: 255)]
     private ?string $mainImageName = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
+    private ?User $author = null;
+
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
@@ -98,6 +101,18 @@ class Tricks
     public function setMainImageName(string $mainImageName): self
     {
         $this->mainImageName = $mainImageName;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

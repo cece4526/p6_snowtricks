@@ -2,6 +2,7 @@
 
 namespace App\Entity\Trait;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 trait UpdateAtTrait
@@ -14,7 +15,7 @@ trait UpdateAtTrait
         return $this->updateAt;
     }
 
-    public function setUpdateAt(\DateTimeImmutable $updateAt): static
+    public function setUpdateAt(DateTimeImmutable $updateAt): self
     {
         $this->updateAt = $updateAt;
 

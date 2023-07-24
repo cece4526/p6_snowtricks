@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Tricks;
 use App\Form\TrickType;
+use App\Repository\CategoryRepository;
 use App\Repository\TricksRepository;
+use App\Repository\UserRepository;
 use App\Service\PictureService;
-use DateTimeImmutable;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,5 +51,25 @@ class TricksController extends AbstractController
             'trick' => $trick,
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/singletrick', name: 'app_tricks_show', methods: ['GET'])]
+    public function show(Request $request, TricksRepository $trickRepository, UserRepository $userRepository, CategoryRepository $categoryRepository): Response
+    {
+        $trickId = $request->query->get('id');
+        $trick = $trickRepository->find($trickId);
+        $category = $trick->getCategory();
+        $category = $categoryRepository->find($category);
+        $user = $trick->getAuthor();
+        $user = $userRepository->find($user);
+        $date = $trick->getUpdateAt()->format('d-m-Y H:i');
+
+        return  $this->render('tricks/single_trick.html.twig', [
+            'trick' => $trick,
+            'user' => $user,
+            'category' => $category,
+            'date' => $date
+            ]
+        );
     }
 }
