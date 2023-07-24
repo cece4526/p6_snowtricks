@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\UserAuthenticator;
 use App\Service\SendMailService;
 use App\Service\JWTService;
@@ -72,8 +73,24 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verife/{token}', name: 'verify_user')]
-    public function VerifyUser($token, JWTService $jwt) : Response 
+    public function VerifyUser($token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $em) : Response 
     {
-        dd($jwt->isEpired($token));    
+        if ($jwt->isValid($token) && !$jwt->isEpired($token) && $jwt->checkToken($token, $this->getParameter('app.jwtsecret'))) 
+        {
+            $payload = $jwt->getPayload($token);
+            dd($payload);
+            $user = $userRepository->findUser($payload['user_id']);
+
+            if ($user && ! $user->getIsVerified()) 
+            {
+                $user->setIsVerified(true);
+                $em->flush($user);
+                $this->addFlash('succes', 'Utilisateur activé(e)');
+                return $this->redirectToRoute('/');
+            }
+        }   
+
+        $this->addFlash('danger', 'Le token est invalid ou a expiré');
+        return $this->redirectToRoute('app_login');
     }
 }
