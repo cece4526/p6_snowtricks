@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TricksController!{% endblock %}
+{% block title %}Snowtricks{% endblock %}
 
 {% block body %}
 <style>
@@ -9,8 +9,11 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello ! ✅</h1>
-
+    {% if app.user %}
+        <h1>Bienvenue {{ app.user.username }}!</h1>
+    {% else %}
+        <h1>Bienvenue !</h1>
+    {% endif %}
     This friendly message is coming from:
     <ul>
         <li>Your controller at <code><a href="{{ 'C:/wamp64/www/p6_2023/p6_snowtricks/src/Controller/TricksController.php'|file_link(0) }}">src/Controller/TricksController.php</a></code></li>

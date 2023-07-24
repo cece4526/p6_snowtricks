@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\UpdateAtTrait;
 use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 class Video
 {
+    use UpdateAtTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,9 +21,6 @@ class Video
 
     #[ORM\ManyToOne(inversedBy: 'videos')]
     private ?Tricks $trick = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updateAt = null;
 
     public function getId(): ?int
     {
@@ -51,15 +51,4 @@ class Video
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
-    {
-        return $this->updateAt;
-    }
-
-    public function setUpdateAt(\DateTimeImmutable $updateAt): static
-    {
-        $this->updateAt = $updateAt;
-
-        return $this;
-    }
 }

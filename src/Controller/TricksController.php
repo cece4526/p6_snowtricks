@@ -16,13 +16,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/tricks')]
 class TricksController extends AbstractController
 {
-    #[Route('/', name: 'app_tricks')]
-    public function index(): Response
-    {
-        return $this->render('tricks/index.html.twig', [
-            'controller_name' => 'TricksController',
-        ]);
-    }
 
     #[Route('/new', name: 'app_tricks_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TricksRepository $trickRepository, SluggerInterface $slugger, PictureService $pictureService): Response

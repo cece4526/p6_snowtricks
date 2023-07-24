@@ -1,0 +1,30 @@
+{% if app.user %}
+    <nav id="menu_dir" class="col navbar navbar-expand-lg">
+        <button id="button_menu" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+            <span class="button">Menu</span>
+        </button>
+        <div id="navbarContent" class="collapse navbar-collapse menu_dir">
+            <ul class="navbar-nav">
+                <li class="nav-item active"><a class="nav-link bouton4" href="/logout">Déconnexion</a></li>
+                <li class="nav-item active"><a class="nav-link bouton4" href="/">Accueil</a></li>
+                <li class="nav-item active"><a class="nav-link bouton4" href="/user/profile?id={{ app.user.id }}">Profil</a></li>
+                <li class="nav-item active"><a class="nav-link bouton4" href="/tricks/new">New trick</a></li>
+                {# {% if session.get('role') == 'admin' %}
+                    <li class="nav-item active"><a class="nav-link bouton4" href="../public/index.php?route=administration">Administration</a></li>
+                {% endif %} #}
+            </ul>
+        </div>
+    </nav>
+{% else %}
+    <nav id="menu_dir" class="col navbar navbar-expand-lg">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+            <span class="button">Menu</span>
+        </button>
+        <div id="navbarContent" class="collapse navbar-collapse menu_dir">
+            <ul class="navbar-nav">
+                <li class="nav-item active"><a class="nav-link bouton4" href="/inscription">Inscription</a></li>
+                <li class="nav-item active"><a class="nav-link bouton4" href="/login">Connexion</a></li>
+            </ul>
+        </div>
+    </nav>
+{% endif %}
