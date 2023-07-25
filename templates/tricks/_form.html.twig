@@ -1,12 +1,37 @@
-<div class="w-full">
+{# <div class="w-full">
     {{ form_start(form) }}
     {{ form_errors(form) }}
+
         {{ form_row(form.name) }}
         {{ form_row(form.slug) }}
         {{ form_row(form.description) }}
+
         {{ form_row(form.images) }}
-    <button class="btn my-8 py-2 px-12 hover:italic hover:bg-cyan-300">
+    <button class="btn btn-primary mt-3 my-8 py-2 px-12 hover:italic hover:bg-cyan-300">
             {{ button_label|default('Creer le trick') }}
     </button>
     {{ form_end(form) }}
-</div>
+</div> #}
+<scection class="container">
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <div class="row mb-3">
+        {{ form_row(form.name) }}
+    </div>
+    <div class="row mb-3">
+        {{ form_row(form.slug) }}
+    </div>
+    <div class="row mb-3">
+        {{ form_row(form.category) }}
+    </div>
+    <div class="row mb-3">
+        {{ form_row(form.description) }}
+    </div>
+    <div class="row mb-3">
+        {{ form_row(form.images) }}
+    </div>
+    <button class="btn btn-primary mt-3 my-8 py-2 px-12 hover:italic hover:bg-cyan-300">
+            {{ button_label|default('Creer le trick') }}
+    </button>
+    {{ form_end(form) }}
+</scection>

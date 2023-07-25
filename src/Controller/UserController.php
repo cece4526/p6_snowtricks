@@ -14,19 +14,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
-    {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
-    }
-
     #[Route('/profile', name: 'app_user_show', methods: ['GET'])]
     public function show(Request $request, UserRepository $userRepository): Response
     {
+        //I retrieve attribute in the get then I replace it in object
         $userId = $request->query->get('id');
         $user = $userRepository->find($userId);
+
+        //I return it in my view for use
         return  $this->render('user/show.html.twig', [
             'user' => $user,
             ]

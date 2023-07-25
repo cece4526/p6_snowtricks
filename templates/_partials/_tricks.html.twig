@@ -1,0 +1,24 @@
+<div class="container p-5">
+    <div class="row">
+        <div class="col-lg-4 mb-4 trick" style="display: block;">
+        {% for trick in tricks %}
+        <pre>
+            {{ dump(trick.id) }}
+        </pre>
+            <div class="card">
+                <a href="{{ trick.name }}"><img class="card-img-top home" src="" alt=""></a>
+                <div class="card-body test">
+                <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/singletrick?id={{trick.id}}" target="_blank">{{ trick.name }}</a>                                        
+                </div>
+            </div>  
+        {% endfor %}            
+                         
+        </div>     
+        <div class="container">
+            <div class="row justify-content-center m-3">
+                <a href="#" id="loadMoreTrick"><i class="fas fa-plus-circle fa-3x"></i></a>
+                <a href="#" id="loadLessTrick"><i class="fas fa-minus-circle fa-3x"></i></a>              
+            </div>
+        </div>          
+    </div>         
+</div>
