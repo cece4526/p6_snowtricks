@@ -8,7 +8,8 @@ use App\Repository\CategoryRepository;
 use App\Repository\TricksRepository;
 use App\Repository\UserRepository;
 use App\Service\PictureService;
-use DateTime;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,32 +21,39 @@ class TricksController extends AbstractController
 {
 
     #[Route('/new', name: 'app_tricks_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, TricksRepository $trickRepository, SluggerInterface $slugger, PictureService $pictureService): Response
+    public function new(Request $request, TricksRepository $trickRepository,EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
     {
-        //I create my form
+        //I create my form for new trick
         $trick = new Tricks();
         $form = $this->createForm(TrickType::class, $trick);
-
-        //I get the values there
+        $user = $this->getUser();
+        //the form request is processed
         $form->handleRequest($request);
 
+        if ($user === null) {
+            
+            $this->addFlash('danger', 'Veuillez vous connecter pour ajouter un trick');
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        }
         //I check if I have a form and that it is valid
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new DateTimeImmutable();
             $trick->setUpdateAt($now);
-            $trick->setSlug($slugger->slug($trick->getName()));
-
-            $images = $form->get('images')->getData();
-            foreach ($images as $image) {
-                $folder = 'tricks';
-                $fichier = $pictureService->add($image, $folder, 300, 300);
-                die;
-            }
+            $trick->setSlug($slugger->slug($trick->getSlug()));
+            $trick->setAuthor($user);
+            // $images = $form->get('images')->getData();
+            // foreach ($images as $image) {
+            //     $folder = 'tricks';
+            //     $fichier = $pictureService->add($image, $folder, 300, 300);
+            //     die;
+            // }
+            $em->persist($trick);
+            $em->flush();
 
             $trickRepository->save($trick, true);
             $this->addFlash(
-                'notice',
-                'le trick a bien été enregistré'
+                'succes',
+                'Le trick a bien été enregistré'
             );
 
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);

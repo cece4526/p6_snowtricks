@@ -4,15 +4,16 @@ namespace App\Entity;
 
 use App\Entity\Trait\SlugTrait;
 use App\Entity\Trait\UpdateAtTrait;
+use App\Repository\TricksRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TricksRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'le trick a déjà été enregistré')]
 class Tricks
 {
     use UpdateAtTrait;
@@ -23,17 +24,17 @@ class Tricks
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:true)]
     private ?string $mainImageName = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
-    private ?User $author = null;
+    private ?User $author;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;

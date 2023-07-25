@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'compte existant déja avec cette email')]
+#[UniqueEntity(fields: ['username'], message: 'compte existant déja avec ce nom de compte')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use CreatedAtTrait;

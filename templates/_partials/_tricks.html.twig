@@ -2,10 +2,7 @@
     <div class="row">
         <div class="col-lg-4 mb-4 trick" style="display: block;">
         {% for trick in tricks %}
-        <pre>
-            {{ dump(trick.id) }}
-        </pre>
-            <div class="card">
+            <div class="card mt-5 mb-5">
                 <a href="{{ trick.name }}"><img class="card-img-top home" src="" alt=""></a>
                 <div class="card-body test">
                 <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/singletrick?id={{trick.id}}" target="_blank">{{ trick.name }}</a>                                        
