@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 class RegistrationController extends AbstractController
 {
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, JWTService $jwt ,SendMailService $mail , UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, JWTService $jwt ,SendMailService $mail , UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -66,7 +66,7 @@ class RegistrationController extends AbstractController
                 $request
             );
         }
-
+        $userRepository->remove($user);
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

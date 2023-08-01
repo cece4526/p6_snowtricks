@@ -13,6 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class RegistrationFormType extends AbstractType
 {
@@ -39,7 +40,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Valider votre formulaire en cochant le champ.',
                     ]),
                 ],
             ])
@@ -47,21 +48,25 @@ class RegistrationFormType extends AbstractType
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'label' => 'mot de passe',
+                'label' => 'Mot de passe',
                 'attr' => [
                     'autocomplete' => 'new-password',
                     'class' => 'form-control'
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Taper un mot de passe',
                     ]),
                     new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'min' => 8,
+                        'minMessage' => 'Le mot de passe doit avoir plus de {{ limit }} characters',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
+                    new PasswordStrength([
+                        'minScore' => '1',
+                        'message' => 'Le mot de passe doit contenir minimum une majuscule, un chiffre et un caractère spécial(.,; ...)'
+                    ])
                 ],
             ])
         ;

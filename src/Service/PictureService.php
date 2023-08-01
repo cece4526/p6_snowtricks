@@ -16,35 +16,6 @@ class PictureService
         $this->params = $params;
     }
 
-    public function imageCutout(?array $picture_info,?GdImage $picture_source, ?int $width, ?int $height)
-    {
-        $imageWidth = $picture_info[0];
-        $imageHeigth = $picture_info[1];
-        switch ($imageWidth <=> $imageHeigth) {
-            case -1:    // portrait
-                $squareSize = $imageWidth;
-                $src_x = 0;
-                $src_y = ($imageHeigth - $squareSize) /2;
-                break;
-            case 0:     // carré
-                $squareSize = $imageWidth;
-                $src_x = 0;
-                $src_y = 0;
-                break;
-            case 1:     // paysage
-                $squareSize = $imageHeigth;
-                $src_x = ($imageWidth - $squareSize) /2;
-                $src_y = 0;
-                break;
-        }
-
-        $resize_picture = imagecreatetruecolor($width, $height);
-        $picture_source_resize = imagecopyresampled($resize_picture, $picture_source, 0, 0, $src_x, $src_y, $width, $height, $squareSize, $squareSize);
-        var_dump($picture_source, '');
-        die;
-        return $picture_source_resize;
-    }
-
     public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 250, ?int $height = 250)
     {
         $fichier = md5(uniqid(rand(), true)). '.webp';
@@ -68,20 +39,44 @@ class PictureService
                 throw new Exception('Format d\image incorrect');
         }
 
+        $imageWidth = $picture_info[0];
+        $imageHeigth = $picture_info[1];
+
+        switch ($imageWidth <=> $imageHeigth) {
+            case -1:    // portrait
+                $squareSize = $imageWidth;
+                $src_x = 0;
+                $src_y = ($imageHeigth - $squareSize) /2;
+                break;
+            case 0:     // carré
+                $squareSize = $imageWidth;
+                $src_x = 0;
+                $src_y = 0;
+                break;
+            case 1:     // paysage
+                $squareSize = $imageHeigth;
+                $src_x = ($imageWidth - $squareSize) /2;
+                $src_y = 0;
+                break;
+        }
+
+        $resize_picture = imagecreatetruecolor($width, $height);
+        imagecopyresampled($resize_picture, $picture_source, 0, 0, $src_x, $src_y, $width, $height, $squareSize, $squareSize);
+
         $path = $this->params->get('images_directory') . $folder;
         
         if (!file_exists($path . '/mini/')) {
             mkdir($path . '/mini/',  0755, true);
         }
 
-        imagewebp($picture_source, $path . '/mini/' . $width . 'x' . $height . '-' . $fichier);
+        imagewebp($resize_picture, $path . '/mini/' . $width . 'x' . $height . '-' . $fichier);
 
         $picture->move($path . '/', $fichier);
 
         return $fichier;
     }
 
-    public function deletePicture(?string $fichier, ?string $folder, ?int $width = 250, ?int $height = 250)
+    public function deletePicture(string $fichier, ?string $folder ='', ?int $width = 250, ?int $height = 250)
     {
         if ($file !== 'default.webp') {
             $succes = false;

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatedAtTrait;
 use App\Entity\Trait\SlugTrait;
 use App\Entity\Trait\UpdateAtTrait;
 use App\Repository\TricksRepository;
@@ -16,6 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity(fields: ['name'], message: 'le trick a déjà été enregistré')]
 class Tricks
 {
+    use CreatedAtTrait;
     use UpdateAtTrait;
     use SlugTrait;
 
@@ -30,7 +32,7 @@ class Tricks
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255, nullable:true)]
+    #[ORM\Column(length: 255)]
     private ?string $mainImageName = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]

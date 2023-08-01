@@ -10,8 +10,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TricksVoter extends Voter
 {
-    public const EDIT = 'TRICKS_EDIT';
-    public const DELETE = 'TRICKS_DELETE';
+    const EDIT = 'TRICK_EDIT';
+    const DELETE = 'TRICK_DELETE';
+    const CREATE = 'TRICK_CREATE';
 
     private $security;
 
@@ -20,13 +21,13 @@ class TricksVoter extends Voter
         $this->security = $security;
     }
 
-    protected function supports(string $attribute, $tricks) : bool
+    protected function supports(string $attribute, $trick) : bool
     {
-        if (!in_array($attribute, [self::DELETE])) {
+        if (!in_array($attribute, [self::DELETE, self::EDIT, self::CREATE])) {
             return false;
         }
 
-        if (!$tricks instanceof Tricks) {
+        if (!$trick instanceof Tricks) {
             return false;
         }
         return true;
@@ -35,23 +36,33 @@ class TricksVoter extends Voter
     protected function voteOnAttribute($attribute, $tricks, TokenInterface $token) : bool 
     {
         $user = $token->getUser();
-
         if (!$user instanceof UserInterface) return false;
 
-        if ($this->security->isGranted('ROLE_ADMIN'))return true;
-        
+        if ($this->security->isGranted('ROLE_admin'))return true;
+
+        if ($this->security->isGranted('ROLE_USER'))return true;
         switch ($attribute) {
             case self::DELETE:
                 return $this->canDelete();
                 break;
+            case self::EDIT:
+                return $this->canEdit();
+                break;
+            case self::CREATE:
+                return $this->canCreate();
+                break;
         }
     }
 
-    // private function canEdit() : bool {
-    //     return $this->security->isGranted('ROLE_USER');
-    // }
+    private function canEdit() : bool {
+        return $this->security->isGranted('ROLE_USER');
+    }
 
     private function canDelete() : bool {
+        return $this->security->isGranted('ROLE_USER');
+    }
+
+    private function canCreate() : bool {
         return $this->security->isGranted('ROLE_USER');
     }
 }
