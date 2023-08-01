@@ -3,7 +3,7 @@
         <div class="col-lg-4 mb-4 trick" style="display: block;">
         {% for trick in tricks %}
             <div class="card mt-5 mb-5">
-                <a href="{{ trick.name }}"><img class="card-img-top home" src="" alt=""></a>
+                <a href="{{ trick.name }}"><img class="card-img-top home" src="{{ asset('images/tricks/mini/300x300-' ~ trick.mainImageName) }}" alt=""></a>
                 <div class="card-body test">
                 <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/singletrick?id={{trick.id}}" target="_blank">{{ trick.name }}</a>                                        
                 </div>
