@@ -69,9 +69,13 @@
                         <img class="d-block w-100" src="{{ asset('images/tricks/' ~ trick.mainImageName) }}" alt="">
                         <p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white;">Image principal</p>
                         <div class="position-absolute bottom-0 end-0" style="background: white;">
+                        {% if trick.mainImageName != 'default.webp' %}
                             <a href="{{ path('app_trick_delete_principal', {id: trick.images.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id)}}" class="p-1">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </a>
+                        {% endif %}
+                            
+                            
                         </div>
                     {% endif %}
                     {% if app.request.attributes.get('_route') == 'app_trick_edit' %}

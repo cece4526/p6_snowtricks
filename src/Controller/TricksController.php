@@ -50,16 +50,21 @@ class TricksController extends AbstractController
             $trick->setSlug($slugger->slug($trick->getSlug()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
-            foreach ($images as $image) {
-                $folder = 'tricks';
-                $fichier = $pictureService->add($image, $folder, 300, 300);
-                $img = new Image();
-                $img->setName($fichier);
-                if ($trick->getMainImageName() === null) {
-                    $trick->setMainImageName($fichier);
+            if ($images ==! null) {
+                foreach ($images as $image) {
+                    $folder = 'tricks';
+                    $fichier = $pictureService->add($image, $folder, 300, 300);
+                    $img = new Image();
+                    $img->setName($fichier);
+                    if ($trick->getMainImageName() === null || $fichier ==! null) {
+                        $trick->setMainImageName($fichier);
+                    }
+                    $trick->addImage($img);
                 }
-                $trick->addImage($img);
+            }  else {
+                $trick->setMainImageName('default.webp');
             }
+            
             $em->persist($trick);
             $em->flush();
 
@@ -78,7 +83,7 @@ class TricksController extends AbstractController
         ]);
     }
 
-    #[Route('/singletrick', name: 'app_tricks_show', methods: ['GET', 'POST'])]
+    #[Route('/single', name: 'app_tricks_show', methods: ['GET', 'POST'])]
     public function show(Request $request, TricksRepository $trickRepository, UserRepository $userRepository, CategoryRepository $categoryRepository, EntityManagerInterface $em): Response
     {
         // I retrieve attribute in the get then I replace it in object
@@ -131,15 +136,19 @@ class TricksController extends AbstractController
             $trick->setSlug($slugger->slug($trick->getSlug()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
-            foreach ($images as $image) {
-                $folder = 'tricks';
-                $fichier = $pictureService->add($image, $folder, 300, 300);
-                $img = new Image();
-                $img->setName($fichier);
-                if ($trick->getMainImageName() === null) {
-                    $trick->setMainImageName('300x300-' . $fichier);
+            if ($images ==! null) {
+                foreach ($images as $image) {
+                    $folder = 'tricks';
+                    $fichier = $pictureService->add($image, $folder, 300, 300);
+                    $img = new Image();
+                    $img->setName($fichier);
+                    if ($trick->getMainImageName() === null || $fichier ==! null) {
+                        $trick->setMainImageName($fichier);
+                    }
+                    $trick->addImage($img);
                 }
-                $trick->addImage($img);
+            }  else {
+                $trick->setMainImageName('default.webp');
             }
             $em->persist($trick);
             $em->flush();

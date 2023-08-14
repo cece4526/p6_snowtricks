@@ -6,7 +6,7 @@ use App\Entity\Tricks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Builder\Function_;
+
 
 /**
  * @extends ServiceEntityRepository<Tricks>
