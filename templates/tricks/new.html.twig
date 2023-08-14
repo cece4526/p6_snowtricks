@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Trick{% endblock %}
+
+{% block body %}
+<section class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h1>Nouveau trick</h1>
+            {{ include('tricks/_form.html.twig') }}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{trick.name}} {% endblock %}
+
+{% block body %}
+<section class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h1>Modification du trick {{trick.name}}.</h1>
+            {% include "tricks/_form.html.twig" with { 'button_label': 'Modifier'} %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/image.js')}}" defer></script>
+{% endblock %}
