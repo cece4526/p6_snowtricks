@@ -78,9 +78,9 @@ class PictureService
 
     public function deletePicture(string $fichier, ?string $folder ='', ?int $width = 250, ?int $height = 250)
     {
-        if ($file !== 'default.webp') {
+        if ($fichier !== 'default.webp') {
             $succes = false;
-            $path = $this->params->get('image_directory') . $folder;
+            $path = $this->params->get('images_directory') . $folder;
 
             $mini = $path . '/mini/' . $width . 'x' . $height . $fichier;
 

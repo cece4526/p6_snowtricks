@@ -45,3 +45,15 @@ body {
     margin: -98.75px;
     visibility: hidden;
 }
+.card-responsive {
+    width: 18rem;
+}
+@media screen and (max-width: 499px) {
+    .card-responsive{
+        width: 100%;
+        display: block;
+    }
+    /* .slogan{
+        height: 37vh;
+    } */
+}

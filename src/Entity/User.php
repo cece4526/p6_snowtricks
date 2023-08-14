@@ -48,10 +48,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
-
+    
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Tricks::class, orphanRemoval: true)]
+    private Collection $trick;
+    
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->trick = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,6 +186,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+        /**
+     * @return Collection<int, Trick>
+     */
+    public function getTricks(): Collection
+    {
+        return $this->trick;
+    }
+
+    public function addTrick(Comment $comment): self
+    {
+        if (!$this->trick->contains($comment)) {
+            $this->trick->add($comment);
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrick(Comment $comment): self
+    {
+        if ($this->trick->removeElement($comment)) {
             // set the owning side to null (unless already changed)
             if ($comment->getAuthor() === $this) {
                 $comment->setAuthor(null);

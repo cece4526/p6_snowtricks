@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %} {{trick.name}} {% endblock %}
 {% block body %}
+
 <section class="container mt-5">
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 col-md-offset-1 mt-5 mb-4">
@@ -38,17 +39,23 @@
                     </div>
                     <div class="card-body">
                         <ul class="d-flex  justify-content-center list-inline">
-                            <li class="list-inline-item px-1">Par : {{user.username}} </li> | 
+                            <li class="list-inline-item px-1">Par : {{trick.author.username}} </li> | 
                             <li class="list-inline-item px-1">Ajoutée le : {{trick.createdAt|date('d-m-Y H:i')  }} </li> | 
-                            <li class="list-inline-item px-1">Catégorie : {{category.name}} </li> 
+                            <li class="list-inline-item px-1">Catégorie : {{trick.category.name}} </li> 
                             {% if trick.updateAt %}
                             | 
                             <li class="list-inline-item px-1">Modifié le : {{trick.updateAt|date('d-m-Y H:i')  }}</li>
                             {% endif %}
                         </ul>
                         <hr>
-                        
+                            {% include "comment/_form_comment.html.twig"%}
                         <hr>
+                            {% for comment in trick.comments %}
+                                <div>
+                                    <p>{{comment.author.username}}</p>
+                                    <p>{{comment.content}}</p>
+                                </div>
+                            {% endfor %}
                     </div>
                 </section>
             </div>
@@ -56,125 +63,3 @@
     </section>
 {% endblock %}
 
-{# <div class="container mt-5">  
-        <div class="row justify-content-center mt-5">          
-            <div class="col-md-10 col-md-offset-1 mt-5 mb-4"> 
-                             
-                <div class="card mt-5">
-                    <img class="card-img-top" src="/images/1080.jpg" alt="Backside Rodeo 1080-main">
-                    <div class="card-body">
-                        <ul class="list-inline trick-data">
-                            <li class="list-inline-item">
-                                Par : <a target="_blank" href="/user/1">Admin</a>
-                            </li> |           
-                            <li class="list-inline-item">
-                                Ajouté le 05/03/2019 (<small>Mise à jour le : 03/09/2021</small>)
-                            </li> |                            
-                            <li class="list-inline-item">
-                                Catégorie : Rotations
-                            </li> |
-                            <li class="list-inline-item">
-                                <a href="#comments-block">0 commentaires</a>
-                            </li>
-                        </ul>
-                        <hr>
-                        <h4 class="card-title"><strong>Backside Rodeo 1080</strong></h4>
-                        <p class="card-text">Trois tours avec une rotation désaxée (Rodeo).</p>
-                        <hr>
-                        <!-- Start Carousel -->
-                                                    <div class="row d-lg-flex load-media d-none">
-                                <div class="col-lg-6 col-md-12">
-                                    <div id="carousel" class="carousel slide mt-3 mb-2" data-ride="carousel">
-                                        <ol class="carousel-indicators">
-                                                                                            <li data-target=".carousel" data-slide-to="0" class=""></li>
-                                                                                            <li data-target=".carousel" data-slide-to="1" class="active"></li>
-                                                                                            <li data-target=".carousel" data-slide-to="2"></li>
-                                                                                            <li data-target=".carousel" data-slide-to="3"></li>
-                                                                                    </ol>
-                                        <div class="carousel-inner enlarge">
-                                                                                            <div class="carousel-item">
-                                                    <img class="d-block" src="/images/1080-1.jpg" alt="Backside Rodeo 1080-image-7">
-                                                </div>
-                                                                                            <div class="carousel-item active">
-                                                    <img class="d-block" src="/images/ea2bf897fcaa3dd339c135de20cf3244.jpeg" alt="Backside Rodeo 1080-image-49">
-                                                </div>
-                                                                                            <div class="carousel-item ">
-                                                    <img class="d-block" src="/images/3e7dcc87b0ddb403f9efe5bd0b4c49fe.jpeg" alt="Backside Rodeo 1080-image-50">
-                                                </div>
-                                                                                            <div class="carousel-item ">
-                                                    <img class="d-block" src="/images/9d3e62b48adb3bba201af9c13c24c7fa.gif" alt="Backside Rodeo 1080-image-51">
-                                                </div>
-                                                    
-                                        </div>
-                                        <a class="carousel-control-prev" href="#carousel" data-slide="prev">
-                                            <span class="carousel-control-prev-icon"></span>
-                                        </a>
-                                        <a class="carousel-control-next" href="#carousel" data-slide="next">
-                                            <span class="carousel-control-next-icon"></span>
-                                        </a> 
-                                    </div>
-                                </div>                                          
-                                <div class="col-lg-6 col-md-12">
-                                    <div id="carousel-v" class="carousel slide mt-3 mb-2" data-ride="carousel">
-                                        <ol class="carousel-indicators">
-                                                                                            <li data-target="#carousel-v" data-slide-to="0" class="active"></li>
-                                                                                    </ol>
-                                        <div class="carousel-inner">
-                                                                                            <div class="carousel-item  active ">
-                                                    <iframe src="https://www.youtube.com/embed/vquZvxGMJT0" allowfullscreen=""></iframe>
-                                                </div>
-                                                    
-                                        </div>
-                                        <a class="carousel-control-prev" href="#carousel-v" data-slide="prev">
-                                            <span class="carousel-control-prev-icon"></span>
-                                        </a>
-                                        <a class="carousel-control-next" href="#carousel-v" data-slide="next">
-                                            <span class="carousel-control-next-icon"></span>
-                                        </a> 
-                                    </div>
-                                </div>                                                  
-                            </div>                      
-                            <div class="text-center">
-                                <a href="#" id="loadMedia" class="d-md-block d-lg-none">
-                                    <button class="btn btn-outline-secondary">Afficher les médias</button>
-                                </a>
-                                <a href="#" id="hideMedia" class="d-md-none d-lg-none d-none">
-                                    <button class="btn btn-outline-secondary mt-3">Masquer les médias</button>
-                                </a>
-                            </div>
-                                                <!-- End Carousel -->
-                        <hr>
-                        <h5 class="card-title">Description</h5>
-                        <p class="card-text text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus est diam, tincidunt ac lorem sed, vehicula lobortis ligula. Nullam id scelerisque magna, et cursus arcu. Proin eleifend lacus sit amet bibendum imperdiet. Fusce a iaculis ex, eu euismod nisl. Proin ut fringilla nunc, ac suscipit magna. Curabitur mollis in ipsum vitae ullamcorper. In quis diam ut eros faucibus accumsan in ut est. In nec finibus ex. Etiam vulputate aliquet tortor ac consectetur. Etiam ac tortor aliquet, aliquam lacus efficitur, blandit nisl. Vestibulum in orci ut massa semper ultrices ut et nibh. Sed laoreet cursus libero eget maximus. Integer non lacus cursus tellus porttitor placerat ut sit amet magna.
-
-Pellentesque sagittis fringilla massa eget bibendum. Etiam vestibulum pretium risus, in sollicitudin nisl mollis nec. Integer quis turpis vulputate, volutpat ligula nec, dignissim dolor. Suspendisse potenti. Sed eget nunc vitae urna sodales euismod. Vestibulum mollis, metus at gravida malesuada, enim leo pharetra eros, at volutpat sem odio a lacus. Donec rutrum nisl in metus vehicula, in bibendum sapien vestibulum. Donec porttitor nisi risus, ut dignissim sem iaculis eget. Suspendisse condimentum congue ex, sed placerat nibh vehicula vel. Vestibulum aliquam lobortis dapibus. Donec pharetra posuere sapien a fermentum. Duis turpis nibh, viverra vel risus vel, varius blandit dolor. Praesent fringilla, lectus malesuada dapibus pharetra, risus lorem interdum turpis, id efficitur elit quam a eros. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer eu convallis libero.
-
-Aliquam sed enim lorem. Nunc ullamcorper bibendum mauris molestie ullamcorper. In euismod egestas felis. Vivamus interdum iaculis eros eget pretium. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce non metus non urna hendrerit bibendum. Phasellus et viverra ex, ut maximus urna. Sed non justo id dolor mattis placerat eget commodo velit. Donec ut metus lacus. Proin eget eros eget elit bibendum blandit. Cras volutpat accumsan nunc in molestie. Nunc ultrices nibh ut ornare vulputate. Morbi sed efficitur sem.</p>                                    
-                    </div>
-                </div>
-                <!--  End Trick -->
-
-                <!-- Start Comment Add Form -->
-                                    <div class="col-md-12 px-0 mb-30">
-                        <div class="comments text-center p-3">
-                            <p><a href="/register">Inscrivez-vous</a> ou <a href="/login">connectez vous</a> pour commenter cet article</p>
-                        </div>
-                    </div>
-                                    <!-- Start Comment Add Form -->
-                
-                <!-- Start Comments -->
-                <span class="comments-anchor" id="comments-block"></span>
-                <div class="col-md-12 pl-0 pr-0">
-                    <div class="comments text-left padDiv mb-30">
-                        <div class="entry-comments">
-                        <h6 class="mb-30">0 commentaires</h6>        
-                            <ul class="entry-comments-list list-unstyled">
-                                                   
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Comments -->   
-            </div>     
-        </div>           
-    </div> #}

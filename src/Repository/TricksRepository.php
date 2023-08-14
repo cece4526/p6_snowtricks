@@ -55,28 +55,17 @@ class TricksRepository extends ServiceEntityRepository
         return new Paginator($query);
     }
 
-//    /**
-//     * @return Tricks[] Returns an array of Tricks objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Tricks
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findTrickWithUserAndCategory(int $trickId): ?Tricks
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'u', 'category', 'i', 'comment') // Select trick, user and category
+            ->leftJoin('t.author', 'u') // Join with User entity
+            ->leftJoin('t.category', 'category') // Join with Category entity
+            ->leftJoin('t.comments', 'comment') // Join with Comment entity
+            ->leftJoin('t.images', 'i') // Join with Image entity
+            ->where('t.id = :trickId')
+            ->setParameter('trickId', $trickId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
