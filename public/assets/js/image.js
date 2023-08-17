@@ -1,3 +1,5 @@
+// suppresion de l'image quand on edit un trick / deleting the image when editing a trick
+
 let links = document.querySelectorAll("[data-delete]");
 
 for (let link of links) {
@@ -27,16 +29,21 @@ for (let link of links) {
     });   
 }
 
+// function modification de l'image principal / main image modification function
 let editLinks = document.querySelectorAll("[data-edit]");
-
 for (let editLink of editLinks) {
     editLink.addEventListener("click", function(event) {
         event.preventDefault();
         const divButton = this.parentElement;
         const divPosRelative = divButton.parentElement;
         const divHoldPrincipal = document.querySelector('.holdPrincipal');
-        const messageElement = divHoldPrincipal.querySelector("p");
-        console.log(childHoldPrincipal);
+        console.log(divHoldPrincipal)
+        let messageElement = null;
+        if (divHoldPrincipal !== null) {
+             messageElement = divHoldPrincipal.querySelector("p");
+        }
+        const divHoldMain = document.querySelector('.holdMain');
+        const messageElementMain = divHoldMain.querySelector("p");
         fetch(this.getAttribute('href'), {
             method: "POST", 
             headers: {
@@ -48,7 +55,10 @@ for (let editLink of editLinks) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                divHoldPrincipal.removeChild(messageElement);
+                divHoldMain.removeChild(messageElementMain);
+                if (divHoldPrincipal !== null) {
+                    divHoldPrincipal.removeChild(messageElement);
+                }
                 this.remove();
                 divPosRelative.insertAdjacentHTML('beforeend', '<p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white">Image principal</p>');
                 alert("L'image principale a été modifiée avec succès.");

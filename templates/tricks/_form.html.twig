@@ -1,88 +1,33 @@
-{# <scection class="container mt-5">
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    <div class="row mb-3">
-        {{ form_row(form.name) }}
-    </div>
-    <div class="row mb-3">
-        {{ form_row(form.slug) }}
-    </div>
-    <div class="row mb-3">
-        {{ form_row(form.category) }}
-    </div>
-    <div class="row mb-3">
-        {{ form_row(form.description) }}
-    </div>
-    <pre>
-        {{ dump(trick.mainImageName) }}
-    </pre>
-    {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
-        <div class="d-flex flex-row">
-             {% for image in trick.images %}
-                {% if image.name == trick.mainImageName %}
-                    <div class="position-relative w-25 holdPrincipal">
-                        <img class="d-block w-100" src="{{ asset('images/tricks/mini/300x300-' ~ image.name) }}" alt="">
-                        <p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white;">Image principal</p>
-                        <div class="position-absolute bottom-0 end-0" style="background: white;">
-                            <a href="{{ path('app_trick_delete_principal', {id: image.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id)}}" class="p-1">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="position-relative w-25">
-                        <img class="d-block w-100 main-image" src="{{ asset('images/tricks/mini/300x300-' ~ image.name) }}" alt="">
-                        <div class="position-absolute bottom-0 end-0" style="background: white;">
-                            <a href="{{ path('app_trick_edit_principal', {id: image.id}) }}" data-edit data-token="{{ csrf_token('edit')}}">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </a>
-                            <a href="{{ path('app_trick_delete_image', {id: image.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id)}}">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
-                        </div> 
-                    </div> 
-                {% endif %}  
-            {% endfor %}
-        </div>              
-    {% endif %}
-    <div class="row mb-3">
-        {{ form_row(form.images) }}
-    </div>
-    <button class="btn btn-primary mt-3 my-8 py-2 px-12 hover:italic hover:bg-cyan-300">
-            {{ button_label|default('Creer le trick') }}
-    </button>
-    {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
-        <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-primary mt-3 my-8 py-2 px-12 hover:italic hover:bg-cyan-300" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
-        </a>
-    {% endif %} #}
-
     {{ form_start(form) }}
     {{ form_errors(form) }}
     <div class="row">
         <div class="col">
             <div class="card">
                 <section>
-                    <div class="text-center position-relative holdPrincipal">
+                    <div class="text-center position-relative holdMain">
                     {% if app.request.attributes.get('_route') == 'app_tricks_new' %}
                         <img src="/images/default.png" alt="" class="card-img-top">
                     {% else %}
                         <img class="d-block w-100" src="{{ asset('images/tricks/' ~ trick.mainImageName) }}" alt="">
                         <p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white;">Image principal</p>
-                        <div class="position-absolute bottom-0 end-0" style="background: white;">
+                        <div class="position-absolute top-0 end-0 m-2" style="background: white;">
                         {% if trick.mainImageName != 'default.webp' %}
-                            <a href="{{ path('app_trick_delete_principal', {id: trick.images.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id)}}" class="p-1">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </a>
+                            {% for image in trick.images %}
+                                {% if image.name == trick.mainImageName %}
+                                    <a href="{{ path('app_trick_delete_principal', {id: image.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ image.id)}}" class="p-1">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}    
                         {% endif %}
-                            
-                            
                         </div>
                     {% endif %}
+                    </div>
                     {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
                         <div class="d-flex flex-row">
                             <div class="d-flex flex-wrap w-50">
                             {% for image in trick.images %}
-                                {% if image.name != trick.mainImageName %}
+                                {% if image.name == trick.mainImageName %}
                                     <div class="position-relative w-25 holdPrincipal">
                                         <img class="d-block w-100" src="{{ asset('images/tricks/mini/300x300-' ~ image.name) }}" alt="">
                                         <p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white;">Image principal</p>

@@ -1,5 +1,7 @@
+
+{% if tricks|length > 0 %}
 <div class="container mt-4">
-    <div class="row row-cols-5 ">
+    <div class="row row-cols-5 tricks-container">
         {% for trick in tricks %}
             <div class="col card m-2 card-responsive">
                 <a href="/tricks/single?id={{trick.id}}"><img class="card-img-top home" src="{{ asset('images/tricks/mini/300x300-' ~ trick.mainImageName) }}" alt=""></a>
@@ -19,3 +21,11 @@
                                 
     </div>         
 </div>
+<div class="pt-6 text-lg hover:italic hover:text-cyan-500">
+{% if next is defined %}
+<button type="button" data-target="{{ path('app_home', { offset: next }) }}#tricks_index" class="mx-2 underline pagination-link next-page">Load more</button>
+{% endif %}
+</div>
+{% else %}
+    <p>No tricks have been posted yet.</p>
+{% endif %}

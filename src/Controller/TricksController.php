@@ -84,7 +84,7 @@ class TricksController extends AbstractController
     }
 
     #[Route('/single', name: 'app_tricks_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, TricksRepository $trickRepository, UserRepository $userRepository, CategoryRepository $categoryRepository, EntityManagerInterface $em): Response
+    public function show(Request $request, TricksRepository $trickRepository, EntityManagerInterface $em): Response
     {
         // I retrieve attribute in the get then I replace it in object
         $trickId = $request->query->get('id');
@@ -117,6 +117,7 @@ class TricksController extends AbstractController
     #[Route('/edition/{id}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
     public function edit(Tricks $trick, Request $request, TricksRepository $trickRepository,EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
     {
+        $trick = $trickRepository->findTrickWithEdit($trick->getId());
         $this->denyAccessUnlessGranted('TRICK_EDIT', $trick);
         //I create my form for edit trick
         $form = $this->createForm(TrickType::class, $trick);
