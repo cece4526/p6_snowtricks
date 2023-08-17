@@ -6,7 +6,7 @@ use App\Entity\Tricks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Builder\Function_;
+
 
 /**
  * @extends ServiceEntityRepository<Tricks>
@@ -46,7 +46,7 @@ class TricksRepository extends ServiceEntityRepository
     public function getTrickPaginator(int $offset): Paginator
     {
         $query = $this->createQueryBuilder('t')
-            ->orderBy('t.updateAt', 'DESC')
+            ->orderBy('CASE WHEN t.updateAt IS NULL THEN t.createdAt ELSE t.updateAt END', 'DESC')
             ->setMaxResults(self::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
             ->getQuery()
@@ -62,6 +62,19 @@ class TricksRepository extends ServiceEntityRepository
             ->leftJoin('t.author', 'u') // Join with User entity
             ->leftJoin('t.category', 'category') // Join with Category entity
             ->leftJoin('t.comments', 'comment') // Join with Comment entity
+            ->leftJoin('t.images', 'i') // Join with Image entity
+            ->where('t.id = :trickId')
+            ->setParameter('trickId', $trickId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findTrickWithEdit(int $trickId): ?Tricks
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'u', 'category', 'i') // Select trick, user and category
+            ->leftJoin('t.author', 'u') // Join with User entity
+            ->leftJoin('t.category', 'category') // Join with Category entity
             ->leftJoin('t.images', 'i') // Join with Image entity
             ->where('t.id = :trickId')
             ->setParameter('trickId', $trickId)

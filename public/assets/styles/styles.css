@@ -46,11 +46,11 @@ body {
     visibility: hidden;
 }
 .card-responsive {
-    width: 18rem;
+    width: 15rem;
 }
-@media screen and (max-width: 499px) {
+@media screen and (max-width: 765px) {
     .card-responsive{
-        width: 100%;
+        width: 90%;
         display: block;
     }
     /* .slogan{
