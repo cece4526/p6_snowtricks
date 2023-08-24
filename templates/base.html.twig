@@ -19,20 +19,36 @@
         {% endblock %}
     </head>
     <body>
-        <header >
+        {# <header>
             {% include '_partials/_navbar.html.twig' %}
             {% if app.user and app.user.getIsVerified == false %}
                 <div class="alert alert-warning alert dismissible mt-3 position-fixed" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close" ></button>
+                    <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                     <div class="alert-message">
                         <strong>Votre compte n'est pas activé</strong>,
                         <a href="{{ path('resend_verif')}}">renvoyer le lien d'activation.</a>
                     </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close" ></button>
                 </div>
             {% endif %}
             {% include '_partials/_flash.html.twig' %}
-        </header>
-        {% block body %}{% endblock %}
+        </header> #}
+        <body>
+            {% include '_partials/_navbar.html.twig' %}
+            {% if app.user and app.user.getIsVerified == false %}
+                <div class="alert alert-warning alert dismissible mt-3 position-fixed" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <div class="alert-message">
+                        <strong>Votre compte n'est pas activé</strong>,
+                        <a href="{{ path('resend_verif')}}">renvoyer le lien d'activation.</a>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close" ></button>
+                </div>
+            {% endif %}
+            {% include '_partials/_flash.html.twig' %}
+            {% block body %}{% endblock %}  
+        </body>
+        
         {% include '_partials/_footer.html.twig' %}
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

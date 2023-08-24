@@ -71,7 +71,7 @@
                             {{ form_widget(form.description) }}
                         </div>
                     {% endblock %}
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column">
                         <ul class="d-flex  justify-content-center list-inline">
                         {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
                             <li class="list-inline-item px-1">Par : {{trick.author.username}} </li> | 
@@ -86,13 +86,16 @@
                         <div class="row mb-3">
                             {{ form_row(form.images) }}
                         </div>
-                        <button class="btn btn-primary mt-3 my-8 py-2 px-12 hover:italic hover:bg-cyan-300">
-                                {{ button_label|default('Creer le trick') }}
-                        </button>
-                        {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
-                            <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-primary mt-3 my-8 py-2 px-12 hover:italic hover:bg-cyan-300" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
-                            </a>
-                        {% endif %}
+                        <div class="m-auto button-responsive">
+                            <button class="btn btn-primary m-auto px-3 py-2 hover:bg-cyan-300">
+                                    {{ button_label|default('Creer le trick') }}
+                            </button>
+                            {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
+                                <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-danger py-2 hover:bg-cyan-300" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div> 
                 </section>
             </div>
         </div>
