@@ -31,13 +31,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Update the pagination links
                 nextPageLink.setAttribute('data-target', `/offset=${data.next}`);
+                loader.classList.remove('d-flex');
             });
     }
 
 
     nextPageLink.addEventListener('click', function(event) {
         event.preventDefault();
-        console.log('coucou');
+        const loader = document.querySelector('#loader');
+        loader.classList.add('d-flex');
         const url = this.getAttribute('data-target');
         loadPage(url);
         return  false;

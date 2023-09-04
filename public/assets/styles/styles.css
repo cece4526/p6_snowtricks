@@ -67,11 +67,14 @@ button p{
     margin: 0;
     margin-right: 12%;
 }
+.width-container{
+    width: 50%;
+}
 /* loader  en css pour le lien lead more / css loader for the lead more link */
 #loader{
     background-color: white;
     width: 50%;
-    display: flex;
+    display: none;
     justify-content: end;
     align-items: center;
     margin-right: 10%;
@@ -158,12 +161,16 @@ button p{
     }
     .container-responsive{
         padding: 5%;
+        padding-bottom: 5rem;
     }
     .pos_loader button{
         width: 50%;
     }
     .button-responsive{
         margin-bottom: 2%;
+    }
+    .width-container{
+        width: 100%;
     }
 }
 /* responsive navbar */

@@ -19,16 +19,16 @@
             </div>  
         {% endfor %}            
                                 
-    </div>         
+    </div> 
+    <div class="pos_loader mb-2">
+    {% if next is defined %}
+        <button type="button" data-target="{{ path('app_home', { offset: next }) }}#tricks_index" class="mx-2 underline pagination-link next-page">
+        {% include '_partials/_loader.html.twig' %}
+        </button>
+    {% endif %}
+    </div>
+    {% else %}
+        <p>No tricks have been posted yet.</p>
+    {% endif %}        
 </div>
-<div class="pos_loader mb-2">
 
-{% if next is defined %}
-    <button type="button" data-target="{{ path('app_home', { offset: next }) }}#tricks_index" class="mx-2 underline pagination-link next-page">
-{% include '_partials/_loader.html.twig' %}
-</button>
-{% endif %}
-</div>
-{% else %}
-    <p>No tricks have been posted yet.</p>
-{% endif %}
