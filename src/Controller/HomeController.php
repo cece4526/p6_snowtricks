@@ -14,7 +14,6 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home', methods:['GET'])]
     public function index(TricksRepository $tricksRepository, Request $request): Response
     {
-        // dd($request->query->get('offset'));
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $tricksRepository->getTrickPaginator($offset);
         if ($request->query->get('offset') === null) {
@@ -40,6 +39,5 @@ class HomeController extends AbstractController
                 'next' => min(count($paginator), $offset + TricksRepository::PAGINATOR_PER_PAGE),
             ]);
         }
-        
     }
 }

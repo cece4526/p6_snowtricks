@@ -1,31 +1,36 @@
 
 {% if tricks|length > 0 %}
-<div class="container mt-4">
-    <div class="row row-cols-5 tricks-container">
+<div class="container container-responsive mt-4">
+    <div  id="tricks" class="row row-cols-5 tricks-container">
         {% for trick in tricks %}
             <div class="col card m-2 card-responsive">
                 <a href="/tricks/single?id={{trick.id}}"><img class="card-img-top home" src="{{ asset('images/tricks/mini/300x300-' ~ trick.mainImageName) }}" alt=""></a>
                 <div class="card-body d-flex position-Srelative">
                     <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/single?id={{trick.id}}" target="_blank">{{ trick.name }}</a>
+                    {% if app.user != null %}
                     <div class="position-absolute position-absolute end-0 m-2">
                         <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="p-1">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                         </a>
-                        <a href="" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ trick.mainImageName)}}">
+                        <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ trick.mainImageName)}}" onclick="return confirm('etes-vous sur de vouloir supprimé le trick ?');">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
-                    </div>                                    
+                    </div>                        
+                    {% endif %} 
                 </div>
             </div>  
         {% endfor %}            
                                 
-    </div>         
+    </div> 
+    <div class="pos_loader mb-2">
+    {% if next is defined %}
+        <button type="button" data-target="{{ path('app_home', { offset: next }) }}#tricks_index" class="mx-2 underline pagination-link next-page">
+        {% include '_partials/_loader.html.twig' %}
+        </button>
+    {% endif %}
+    </div>
+    {% else %}
+        <p>No tricks have been posted yet.</p>
+    {% endif %}        
 </div>
-<div class="pt-6 text-lg hover:italic hover:text-cyan-500">
-{% if next is defined %}
-<button type="button" data-target="{{ path('app_home', { offset: next }) }}#tricks_index" class="mx-2 underline pagination-link next-page">Load more</button>
-{% endif %}
-</div>
-{% else %}
-    <p>No tricks have been posted yet.</p>
-{% endif %}
+

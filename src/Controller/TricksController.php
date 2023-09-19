@@ -6,10 +6,10 @@ use App\Entity\Image;
 use App\Entity\Tricks;
 use App\Form\TrickType;
 use App\Entity\Comment;
+use App\Entity\Video;
 use App\Form\CommentFormType;
-use App\Repository\CategoryRepository;
+use App\Repository\CommentRepository;
 use App\Repository\TricksRepository;
-use App\Repository\UserRepository;
 use App\Service\PictureService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-
 
 #[Route('/tricks')]
 class TricksController extends AbstractController
@@ -35,6 +33,7 @@ class TricksController extends AbstractController
         $this->denyAccessUnlessGranted('TRICK_CREATE', $trick);
         $form = $this->createForm(TrickType::class, $trick);
         $user = $this->getUser();
+        // dd($form, $request);
         //the form request is processed
         $form->handleRequest($request);
 
@@ -50,7 +49,23 @@ class TricksController extends AbstractController
             $trick->setSlug($slugger->slug($trick->getSlug()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
-            if ($images ==! null) {
+            $videos = $trick->getVideos();
+            if ($videos !== null) {
+                $tmp = [];
+                foreach ($videos as $video) { 
+                    $linkAutorized = explode('https://www.youtube.com/', $video);
+                    if ($linkAutorized[0] === "") {
+                        $link = new Video();
+                        $link->setLink($video);
+                        $tmp[]  = $link;
+                    }
+                    else {
+                        $this->addFlash('error', 'Ce n\'est pas un lien youtube');
+                    }
+                }
+                $trick->setVideos($tmp);
+            }
+            if ($images !== null && !empty($images)) {
                 foreach ($images as $image) {
                     $folder = 'tricks';
                     $fichier = $pictureService->add($image, $folder, 300, 300);
@@ -64,7 +79,6 @@ class TricksController extends AbstractController
             }  else {
                 $trick->setMainImageName('default.webp');
             }
-            
             $em->persist($trick);
             $em->flush();
 
@@ -84,11 +98,16 @@ class TricksController extends AbstractController
     }
 
     #[Route('/single', name: 'app_tricks_show', methods: ['GET', 'POST'])]
-    public function show(Request $request, TricksRepository $trickRepository, EntityManagerInterface $em): Response
+    public function show(Request $request, TricksRepository $trickRepository, CommentRepository $commentRepository , EntityManagerInterface $em): Response
     {
         // I retrieve attribute in the get then I replace it in object
         $trickId = $request->query->get('id');
+        if ($trickId ===  null) {
+            $trickId = $request->query->getInt('trickId', 0);
+        }
         $trick = $trickRepository->findTrickWithUserAndCategory($trickId);
+        $page = max(0, $request->query->getInt('offset', 0));
+        $comments = $commentRepository->getCommentPaginator($page, $trickId);
         $comment = new Comment(); // Create a new Comment instance
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request); // Handle form submission
@@ -105,7 +124,31 @@ class TricksController extends AbstractController
             $this->addFlash('success', 'Le commentaire a bien été enregistré.');
             // Redirect or do whatever you need after successful comment submission
         }
-
+        
+        if ($request->query->get('offset') === null) {
+            return $this->render('tricks/single_trick.html.twig', [
+                'user' => $this->getUser(),
+                'form' => $form->createView(),
+                'trick' => $trick,
+                'comments' => $comments,
+                'next' => min(count($comments), $page + CommentRepository::PAGINATOR_PER_PAGE),
+            ]);
+        } else {
+            $commentsData = [];
+            foreach ($comments as $oneComment) {
+                $commentsData[] = [
+                    'id' => $oneComment->getId(),
+                    'author' => $oneComment->getAuthor()->getUsername(),
+                    'content' => $oneComment->getContent()
+                ];
+            }
+            // dd($commentsData);
+            return new JsonResponse([
+                'comments' => $commentsData,
+                'previous' => $page - TricksRepository::PAGINATOR_PER_PAGE,
+                'next' => min(count($comments), $page + TricksRepository::PAGINATOR_PER_PAGE),
+            ]);
+        }
         // I return it in my view for use
         return $this->render('tricks/single_trick.html.twig', [
             'form' => $form->createView(),
@@ -127,7 +170,7 @@ class TricksController extends AbstractController
 
         if ($user === null) {
             
-            $this->addFlash('danger', 'Veuillez vous connecter pour ajouter un trick');
+            $this->addFlash('danger', 'Veuillez vous connecter pour modifier un trick');
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
         //I check if I have a form and that it is valid
@@ -137,13 +180,30 @@ class TricksController extends AbstractController
             $trick->setSlug($slugger->slug($trick->getSlug()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
+            $videos = $trick->getVideos();
+            if ($videos !== null) {
+                $tmp = [];
+                dd($videos);
+                foreach ($videos as $video) { 
+                    $linkAutorized = explode('https://www.youtube.com/',$video);
+                    if ($linkAutorized[0] === "") {
+                        $link = new Video();
+                        $link->setLink($video);
+                        $tmp[]  = $link;
+                    }
+                    else {
+                        $this->addFlash('error', 'Ce n\'est pas un lien youtube');
+                    }
+                }
+                $trick->setVideos($tmp);
+            }
             if ($images ==! null) {
                 foreach ($images as $image) {
                     $folder = 'tricks';
                     $fichier = $pictureService->add($image, $folder, 300, 300);
                     $img = new Image();
                     $img->setName($fichier);
-                    if ($trick->getMainImageName() === null || $fichier ==! null) {
+                    if ($trick->getMainImageName() === null) {
                         $trick->setMainImageName($fichier);
                     }
                     $trick->addImage($img);
@@ -170,7 +230,7 @@ class TricksController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_trick_delete')]
-    public function delete(Request $request, Tricks $trick, TricksRepository $trickRepository): Response
+    public function delete( Tricks $trick, TricksRepository $trickRepository): Response
     {
         $this->denyAccessUnlessGranted('TRICK_DELETE', $trick);
         $trickRepository->remove($trick, true);

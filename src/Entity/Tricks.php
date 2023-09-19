@@ -37,7 +37,11 @@ class Tricks
     #[ORM\ManyToOne(inversedBy: 'trick')]
     private ?User $author;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'trick',
+        targetEntity: Comment::class,
+        orphanRemoval: true,
+        cascade: ['persist'])]
     private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
@@ -216,6 +220,16 @@ class Tricks
             if ($video->getTrick() === $this) {
                 $video->setTrick(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function setVideos($videos): self
+    {
+        $this->videos = new ArrayCollection();
+        foreach ($videos as $video) {
+            $this->addVideo($video);
         }
 
         return $this;

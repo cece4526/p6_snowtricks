@@ -4,20 +4,29 @@
 
 {% block body %}
 <section class="container  mt-5 pt-1">
-    <div class="row">
-        <div class="col">
+    <div class="row width-container mx-auto">
+        <div class="col text-center">
             <h1>Inscription</h1>
 
             {{ form_errors(registrationForm) }}
 
             {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.email) 
-                }}
-                {{ form_row(registrationForm.username) }}
-                {{ form_row(registrationForm.plainPassword) }}
-                {{ form_row(registrationForm.agreeTerms) }}
+            <div class="border border-secondary rounded-2 p-3 mb-2">
+            {% block form_row %}
+                {{ form_label(registrationForm.username) }}
+                {{ form_widget(registrationForm.username) }}
+                {{ form_label(registrationForm.email) }}
+                {{ form_widget(registrationForm.email) }}
+                {{ form_label(registrationForm.plainPassword) }}
+                {{ form_widget(registrationForm.plainPassword) }}
+                <div class="check">
+                    {{ form_label(registrationForm.agreeTerms) }}
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                </div>
+            {% endblock %}
+                <button type="submit" class="btn btn-primary btn-lg my-3">Register</button>
+            </div>
 
-                <button type="submit" class="btn btn-primary btn-lg mb-3">Register</button>
             {{ form_end(registrationForm) }}
         </div>
     </div>
