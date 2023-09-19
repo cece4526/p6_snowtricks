@@ -72,10 +72,11 @@ class TricksRepository extends ServiceEntityRepository
     public function findTrickWithEdit(int $trickId): ?Tricks
     {
         return $this->createQueryBuilder('t')
-            ->select('t', 'u', 'category', 'i') // Select trick, user and category
+            ->select('t', 'u', 'category', 'i', 'v') // Select trick, user and category
             ->leftJoin('t.author', 'u') // Join with User entity
             ->leftJoin('t.category', 'category') // Join with Category entity
             ->leftJoin('t.images', 'i') // Join with Image entity
+            ->leftJoin('t.videos', 'v') // Join with Image entity
             ->where('t.id = :trickId')
             ->setParameter('trickId', $trickId)
             ->getQuery()

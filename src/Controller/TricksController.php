@@ -183,6 +183,7 @@ class TricksController extends AbstractController
             $videos = $trick->getVideos();
             if ($videos !== null) {
                 $tmp = [];
+                dd($videos);
                 foreach ($videos as $video) { 
                     $linkAutorized = explode('https://www.youtube.com/',$video);
                     if ($linkAutorized[0] === "") {

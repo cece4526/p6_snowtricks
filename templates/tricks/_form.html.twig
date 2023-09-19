@@ -24,11 +24,11 @@
                     {% endif %}
                     </div>
                     {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
-                        <div class="d-flex flex-row">
-                            <div class="d-flex flex-wrap w-50">
+                        <div class="d-md-flex flex-md-row flex-column">
+                            <div class="d-flex flex-md-wrap flex-md-row flex-column mediaW w-50 ">
                             {% for image in trick.images %}
                                 {% if image.name == trick.mainImageName %}
-                                    <div class="position-relative w-25 holdPrincipal">
+                                    <div class="position-relative mediaW w-25 holdPrincipal">
                                         <img class="d-block w-100" src="{{ asset('images/tricks/mini/300x300-' ~ image.name) }}" alt="">
                                         <p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white;">Image principal</p>
                                         <div class="position-absolute bottom-0 end-0" style="background: white;">
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                 {% else %}
-                                    <div class="position-relative w-25">
+                                    <div class="position-relative mediaW w-25">
                                         <img class="d-block w-100 main-image" src="{{ asset('images/tricks/mini/300x300-' ~ image.name) }}" alt="">
                                         <div class="position-absolute bottom-0 end-0" style="background: white;">
                                             <a href="{{ path('app_trick_edit_principal', {id: image.id}) }}" data-edit data-token="{{ csrf_token('edit')}}">
@@ -84,14 +84,21 @@
                         {% endif %}
                         </ul>
                         <div class="row mb-3">
+                                <ul class="videos"
+                                    data-index="{{ form.videos|length > 0 ? form.videos|last.vars.name + 1 : 0 }}"
+                                    data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}"
+                                ></ul>
+                                <button type="button" class="add_item_link" data-collection-holder-class="videos">Add a tag</button>
+                        </div>
+                        <div class="row mb-3">
                             {{ form_row(form.images) }}
                         </div>
                         <div class="m-auto button-responsive">
-                            <button class="btn btn-primary m-auto px-3 py-2 hover:bg-cyan-300">
+                            <button class="btn btn-primary m-auto mb-3 px-3 py-2 hover:bg-cyan-300">
                                     {{ button_label|default('Creer le trick') }}
                             </button>
                             {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
-                                <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-danger py-2 hover:bg-cyan-300" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
+                                <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-danger mb-3 py-2 hover:bg-cyan-300" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
                                 </a>
                             {% endif %}
                         </div>
@@ -102,3 +109,28 @@
     </div>
     {{ form_end(form) }}
 </scection>
+<script>
+    const addFormToCollection = (e) => {
+        const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+        const item = document.createElement('li');
+
+        item.innerHTML = collectionHolder
+            .dataset
+            .prototype
+            .replace(
+            /__name__/g,
+            collectionHolder.dataset.index
+            );
+
+        collectionHolder.appendChild(item);
+
+        collectionHolder.dataset.index++;
+        };
+
+    document
+        .querySelectorAll('.add_item_link')
+        .forEach(btn => {
+            btn.addEventListener("click", addFormToCollection)
+        });
+</script>

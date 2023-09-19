@@ -7,14 +7,16 @@
                 <a href="/tricks/single?id={{trick.id}}"><img class="card-img-top home" src="{{ asset('images/tricks/mini/300x300-' ~ trick.mainImageName) }}" alt=""></a>
                 <div class="card-body d-flex position-Srelative">
                     <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/single?id={{trick.id}}" target="_blank">{{ trick.name }}</a>
+                    {% if app.user != null %}
                     <div class="position-absolute position-absolute end-0 m-2">
                         <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="p-1">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                         </a>
-                        <a href="" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ trick.mainImageName)}}">
+                        <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ trick.mainImageName)}}" onclick="return confirm('etes-vous sur de vouloir supprimé le trick ?');">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
-                    </div>                                    
+                    </div>                        
+                    {% endif %} 
                 </div>
             </div>  
         {% endfor %}            
