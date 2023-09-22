@@ -12,6 +12,7 @@ use App\Repository\CommentRepository;
 use App\Repository\TricksRepository;
 use App\Service\PictureService;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,19 +52,16 @@ class TricksController extends AbstractController
             $images = $form->get('images')->getData();
             $videos = $trick->getVideos();
             if ($videos !== null) {
-                $tmp = [];
                 foreach ($videos as $video) { 
-                    $linkAutorized = explode('https://www.youtube.com/', $video);
-                    if ($linkAutorized[0] === "") {
-                        $link = new Video();
-                        $link->setLink($video);
-                        $tmp[]  = $link;
-                    }
-                    else {
+                    $linkAutorized = explode('https://www.youtube.com/', $video->getLink());
+                    if ($linkAutorized[0] !== "") {
                         $this->addFlash('error', 'Ce n\'est pas un lien youtube');
+                        return $this->render('tricks/new.html.twig', [
+                            'trick' => $trick,
+                            'form' => $form->createView()
+                        ]);
                     }
                 }
-                $trick->setVideos($tmp);
             }
             if ($images !== null && !empty($images)) {
                 foreach ($images as $image) {
@@ -76,7 +74,7 @@ class TricksController extends AbstractController
                     }
                     $trick->addImage($img);
                 }
-            }  else {
+            } else {
                 $trick->setMainImageName('default.webp');
             }
             $em->persist($trick);
@@ -161,6 +159,10 @@ class TricksController extends AbstractController
     public function edit(Tricks $trick, Request $request, TricksRepository $trickRepository,EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
     {
         $trick = $trickRepository->findTrickWithEdit($trick->getId());
+        $videos = new ArrayCollection();
+        foreach ($trick->getVideos() as $video) {
+            $videos->add($video);
+        }
         $this->denyAccessUnlessGranted('TRICK_EDIT', $trick);
         //I create my form for edit trick
         $form = $this->createForm(TrickType::class, $trick);
@@ -180,22 +182,14 @@ class TricksController extends AbstractController
             $trick->setSlug($slugger->slug($trick->getSlug()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
-            $videos = $trick->getVideos();
-            if ($videos !== null) {
-                $tmp = [];
-                dd($videos);
-                foreach ($videos as $video) { 
-                    $linkAutorized = explode('https://www.youtube.com/',$video);
-                    if ($linkAutorized[0] === "") {
-                        $link = new Video();
-                        $link->setLink($video);
-                        $tmp[]  = $link;
-                    }
-                    else {
-                        $this->addFlash('error', 'Ce n\'est pas un lien youtube');
-                    }
+            foreach ($videos as $video) {
+                if (false === $trick->getvideos()->contains($video)) {
+
+                    $em->persist($video);
+
+                    // if you wanted to delete the video entirely, you can also do that
+                    $em->remove($video);
                 }
-                $trick->setVideos($tmp);
             }
             if ($images ==! null) {
                 foreach ($images as $image) {
@@ -208,8 +202,6 @@ class TricksController extends AbstractController
                     }
                     $trick->addImage($img);
                 }
-            }  else {
-                $trick->setMainImageName('default.webp');
             }
             $em->persist($trick);
             $em->flush();
@@ -288,6 +280,19 @@ class TricksController extends AbstractController
                 return new JsonResponse(['success' => true], 200);
             }
             return new JsonResponse(['error' => 'Erreur de la modification de l image'], 400);
+        }
+        return new JsonResponse(['error' => 'token invalide'], 400);
+    }
+
+    #[Route('/suppression/video/{id}', name: 'app_trick_delete_video', methods: ['DELETE'])]
+    public function deleteVideo(Request $request, Video $video, EntityManagerInterface $em): JsonResponse
+    {
+        $data  = json_decode($request->getContent(), true);
+        if ($this->isCsrfTokenValid('delete'. $video->getId(), $data['_token'])) {
+            $em->remove($video);
+            $em->flush();
+
+            return new JsonResponse(['succes' => true], 200);
         }
         return new JsonResponse(['error' => 'token invalide'], 400);
     }
