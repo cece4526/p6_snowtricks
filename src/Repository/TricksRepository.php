@@ -76,7 +76,7 @@ class TricksRepository extends ServiceEntityRepository
             ->leftJoin('t.author', 'u') // Join with User entity
             ->leftJoin('t.category', 'category') // Join with Category entity
             ->leftJoin('t.images', 'i') // Join with Image entity
-            ->leftJoin('t.videos', 'v') // Join with Image entity
+            ->leftJoin('t.videos', 'v') // Join with Video entity
             ->where('t.id = :trickId')
             ->setParameter('trickId', $trickId)
             ->getQuery()

@@ -41,7 +41,7 @@ class CommentController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_comment_delete')]
-    public function delete(Request $request, Comment $comment, CommentRepository $commentRepository): Response
+    public function delete(Comment $comment, CommentRepository $commentRepository): Response
     {
         $trickId = $comment->getTrick()->getId();
         $commentRepository->remove($comment, true);
