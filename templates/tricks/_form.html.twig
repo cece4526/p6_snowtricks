@@ -34,7 +34,7 @@
                             <div class="d-flex flex-md-row flex-column mediaW w-50 ">
                             {% for image in trick.images %}
                                 {% if image.name == trick.mainImageName %}
-                                <div class="position-relative mediaW w-25 holdPrincipal">
+                                <div class="position-relative mediaW w-50 holdPrincipal">
                                     <img class="d-block w-100" src="{{ asset('images/tricks/mini/300x300-' ~ image.name) }}" alt="">
                                     <p class="position-absolute top-50 start-50 translate-middle text-center" style="background: white;">Image principal</p>
                                     <div class="position-absolute bottom-0 end-0" style="background: white;">
@@ -78,8 +78,8 @@
                         {{ form_widget(form.name) }}
                     </div>
                     <div class="form-group">
-                        {{ form_label(form.slug) }}
-                        {{ form_widget(form.slug) }}
+                        {{ form_label(form.slogan) }}
+                        {{ form_widget(form.slogan) }}
                     </div>
                     <div class="form-group w-75">
                         {{ form_label(form.description) }}
@@ -118,7 +118,7 @@
                                 {{ button_label|default('Creer le trick') }}
                         </button>
                         {% if app.request.attributes.get('_route') == 'app_trick_edit' %}
-                            <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="btn btn-danger mb-3 py-2 hover:bg-cyan-300" onsubmit="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
+                            <a href="{{ path('app_trick_delete', {slug: trick.slug}) }}" class="btn btn-danger mb-3 py-2 hover:bg-cyan-300" onclick="return confirm('etes-vous sur de vouloir supprimé le compte ?');">Supprimer
                             </a>
                         {% endif %}
                     </div>

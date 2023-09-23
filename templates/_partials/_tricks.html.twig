@@ -1,18 +1,17 @@
-
 {% if tricks|length > 0 %}
 <div class="container container-responsive mt-4">
     <div  id="tricks" class="row row-cols-5 tricks-container">
         {% for trick in tricks %}
             <div class="col card m-2 card-responsive">
-                <a href="/tricks/single?id={{trick.id}}"><img class="card-img-top home" src="{{ asset('images/tricks/mini/300x300-' ~ trick.mainImageName) }}" alt=""></a>
+                <a href="{{ path('app_tricks_show', {'slug': trick.slug}) }}"><img class="card-img-top home" src="{{ asset('images/tricks/mini/300x300-' ~ trick.mainImageName) }}" alt=""></a>
                 <div class="card-body d-flex position-Srelative">
-                    <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/single?id={{trick.id}}" target="_blank">{{ trick.name }}</a>
+                    <a class="btn btn-outline-info btn-sm trick-link" href="{{ path('app_tricks_show', {'slug': trick.slug}) }}" target="_blank">{{ trick.name }}</a>
                     {% if app.user != null %}
                     <div class="position-absolute position-absolute end-0 m-2">
-                        <a href="{{ path('app_trick_edit', {'id': trick.id}) }}" class="p-1">
+                        <a href="{{ path('app_trick_edit', {'slug': trick.slug}) }}" class="p-1">
                             <i class="fa fa-pencil" aria-hidden="true"></i>
                         </a>
-                        <a href="{{ path('app_trick_delete', {id: trick.id}) }}" class="p-1" data-delete data-token="{{ csrf_token('delete' ~ trick.mainImageName)}}" onclick="return confirm('etes-vous sur de vouloir supprimé le trick ?');">
+                        <a href="{{ path('app_trick_delete', {'slug': trick.slug}) }}" class="p-1" onclick="return confirm('etes-vous sur de vouloir supprimé le compte ?');">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </a>
                     </div>                        

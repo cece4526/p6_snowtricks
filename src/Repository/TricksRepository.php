@@ -55,7 +55,7 @@ class TricksRepository extends ServiceEntityRepository
         return new Paginator($query);
     }
 
-    public function findTrickWithUserAndCategory(int $trickId): ?Tricks
+    public function findTrickWithUserAndCategory(string $trickSlug): ?Tricks
     {
         return $this->createQueryBuilder('t')
             ->select('t', 'u', 'category', 'i', 'comment') // Select trick, user and category
@@ -63,13 +63,13 @@ class TricksRepository extends ServiceEntityRepository
             ->leftJoin('t.category', 'category') // Join with Category entity
             ->leftJoin('t.comments', 'comment') // Join with Comment entity
             ->leftJoin('t.images', 'i') // Join with Image entity
-            ->where('t.id = :trickId')
-            ->setParameter('trickId', $trickId)
+            ->where('t.slug = :trickSlug')
+            ->setParameter('trickSlug', $trickSlug)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findTrickWithEdit(int $trickId): ?Tricks
+    public function findTrickWithEdit(string $trickSlug): ?Tricks
     {
         return $this->createQueryBuilder('t')
             ->select('t', 'u', 'category', 'i', 'v') // Select trick, user and category
@@ -77,8 +77,8 @@ class TricksRepository extends ServiceEntityRepository
             ->leftJoin('t.category', 'category') // Join with Category entity
             ->leftJoin('t.images', 'i') // Join with Image entity
             ->leftJoin('t.videos', 'v') // Join with Video entity
-            ->where('t.id = :trickId')
-            ->setParameter('trickId', $trickId)
+            ->where('t.slug = :trickSlug')
+            ->setParameter('trickSlug', $trickSlug)
             ->getQuery()
             ->getOneOrNullResult();
     }

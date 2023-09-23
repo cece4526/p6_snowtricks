@@ -12,7 +12,9 @@
 </div>           
 
 {% include '_partials/_tricks.html.twig' %}
-
+<div class="d-flex justify-content-end">
+    <a href="/"><i class="fas fa-chevron-up fa-4x chevron-up"></i></a>   
+</div>
 {% endblock %}
 {% block javascripts %}
     <script src="{{ asset('assets/js/pagination.js')}}" defer></script>

@@ -1,4 +1,4 @@
-<h1>Activer vottre compte</h1>
+<h1>Activer votre compte</h1>
 <p>Bonjour {{ user.username }}</p>
 <p>Votre inscription sur le site Snowtrick est à valider en cliquant sur le lien ci-dessous :</p>
 <p><a href="{{ absolute_url(path('verify_user', {token: token})) }}">Lien : {{ absolute_url(path('verify_user', {token: token})) }}</a></p>

@@ -47,22 +47,10 @@ class TricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new DateTimeImmutable();
             $trick->setCreatedAt($now);
-            $trick->setSlug($slugger->slug($trick->getSlug()));
+            $trick->setName(strtoupper($trick->getName()));
+            $trick->setSlug($slugger->slug($trick->getName()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
-            $videos = $trick->getVideos();
-            if ($videos !== null) {
-                foreach ($videos as $video) { 
-                    $linkAutorized = explode('https://www.youtube.com/', $video->getLink());
-                    if ($linkAutorized[0] !== "") {
-                        $this->addFlash('error', 'Ce n\'est pas un lien youtube');
-                        return $this->render('tricks/new.html.twig', [
-                            'trick' => $trick,
-                            'form' => $form->createView()
-                        ]);
-                    }
-                }
-            }
             if ($images !== null && !empty($images)) {
                 foreach ($images as $image) {
                     $folder = 'tricks';
@@ -82,7 +70,7 @@ class TricksController extends AbstractController
 
             $trickRepository->save($trick, true);
             $this->addFlash(
-                'succes',
+                'success',
                 'Le trick a bien été enregistré'
             );
 
@@ -95,17 +83,14 @@ class TricksController extends AbstractController
         ]);
     }
 
-    #[Route('/single', name: 'app_tricks_show', methods: ['GET', 'POST'])]
+    #[Route('/single/{slug}', name: 'app_tricks_show', methods: ['GET', 'POST'])]
     public function show(Request $request, TricksRepository $trickRepository, CommentRepository $commentRepository , EntityManagerInterface $em): Response
     {
-        // I retrieve attribute in the get then I replace it in object
-        $trickId = $request->query->get('id');
-        if ($trickId ===  null) {
-            $trickId = $request->query->getInt('trickId', 0);
-        }
-        $trick = $trickRepository->findTrickWithUserAndCategory($trickId);
+        $trick = new Tricks;
+        $trickSlug = $request->attributes->get('slug');
+        $trick = $trickRepository->findTrickWithUserAndCategory($trickSlug);
         $page = max(0, $request->query->getInt('offset', 0));
-        $comments = $commentRepository->getCommentPaginator($page, $trickId);
+        $comments = $commentRepository->getCommentPaginator($page, $trick->getId());
         $comment = new Comment(); // Create a new Comment instance
         $form = $this->createForm(CommentFormType::class, $comment);
         $form->handleRequest($request); // Handle form submission
@@ -155,10 +140,12 @@ class TricksController extends AbstractController
     }
 
 
-    #[Route('/edition/{id}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Tricks $trick, Request $request, TricksRepository $trickRepository,EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
+    #[Route('/edition/{slug}', name: 'app_trick_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, TricksRepository $trickRepository,EntityManagerInterface $em, SluggerInterface $slugger, PictureService $pictureService): Response
     {
-        $trick = $trickRepository->findTrickWithEdit($trick->getId());
+        $trick = new Tricks;
+        $trickSlug = $request->attributes->get('slug');
+        $trick = $trickRepository->findTrickWithUserAndCategory($trickSlug);
         $videos = new ArrayCollection();
         foreach ($trick->getVideos() as $video) {
             $videos->add($video);
@@ -179,7 +166,8 @@ class TricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new DateTimeImmutable();
             $trick->setUpdateAt($now);
-            $trick->setSlug($slugger->slug($trick->getSlug()));
+            $trick->setName(strtoupper($trick->getName()));
+            $trick->setSlug($slugger->slug($trick->getName()));
             $trick->setAuthor($user);
             $images = $form->get('images')->getData();
             foreach ($videos as $video) {
@@ -208,7 +196,7 @@ class TricksController extends AbstractController
 
             $trickRepository->save($trick, true);
             $this->addFlash(
-                'succes',
+                'success',
                 'Le trick a bien été enregistré'
             );
 
@@ -221,7 +209,7 @@ class TricksController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_trick_delete')]
+    #[Route('/delete/{slug}', name: 'app_trick_delete')]
     public function delete( Tricks $trick, TricksRepository $trickRepository): Response
     {
         $this->denyAccessUnlessGranted('TRICK_DELETE', $trick);
@@ -240,7 +228,7 @@ class TricksController extends AbstractController
                 $em->remove($image);
                 $em->flush();
 
-                return new JsonResponse(['succes' => true], 200);
+                return new JsonResponse(['success' => true], 200);
             }
             return new JsonResponse(['error' => 'Erreur de suppression'], 400);
         }
@@ -251,15 +239,16 @@ class TricksController extends AbstractController
     public function deleteImagePrincipal(Request $request, Image $image, EntityManagerInterface $em, PictureService $pictureService): JsonResponse
     {
         $data  = json_decode($request->getContent(), true);
+        dd($data);
         if ($this->isCsrfTokenValid('delete'. $image->getId(), $data['_token'])) {
             $nom = $image->getName();
             $trick = new Tricks;
             if ($pictureService->deletePicture($nom, 'tricks', 300,  300)) {
                 $em->remove($image);
-                $trick->setMainImageName('null');
+                $trick->setMainImageName('default.webpde');
                 $em->flush();
 
-                return new JsonResponse(['succes' => true], 200);
+                return new JsonResponse(['success' => true], 200);
             }
             return new JsonResponse(['error' => 'Erreur de suppression'], 400);
         }
@@ -292,7 +281,7 @@ class TricksController extends AbstractController
             $em->remove($video);
             $em->flush();
 
-            return new JsonResponse(['succes' => true], 200);
+            return new JsonResponse(['success' => true], 200);
         }
         return new JsonResponse(['error' => 'token invalide'], 400);
     }

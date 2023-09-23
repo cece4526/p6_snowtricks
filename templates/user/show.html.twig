@@ -9,21 +9,14 @@
              
 
                 <h1 class="not-italic font-sans font-semibold">Profile de {{ user.username }} </h1>
-                <div class="my-4 ">
-                        <p class="text-lg">Your Id:</p>
-                        <p class="italic">{{ user.id }}</p>
-                </div>
+
 
                 <div class="mb-4">
-                    <p class="text-lg">Your username:</p>
-                    <p class="italic">{{ user.username }}</p>
-                </div>
-
-                <div class="mb-4">
-                    <p class="text-lg">Your e-mail:</p>
+                    <p class="text-lg">Votre e-mail:</p>
                     <p class="italic">{{ user.email }}</p>
                 </div>
-
+                
+                <a href="{{ path('forgotten_password') }}" class="btn btn-lg btn-warning mt-3">Réinitialiser votre mot de passe</a>
                 {{ include('user/_delete_form.html.twig') }}
         </div>
     </div>
