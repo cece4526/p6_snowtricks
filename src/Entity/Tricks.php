@@ -28,6 +28,9 @@ class Tricks
     #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slogan = null;
+
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
@@ -83,6 +86,17 @@ class Tricks
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+    public function getSlogan(): ?string
+    {
+        return $this->slogan;
+    }
+
+    public function setSlogan(string $slogan): self
+    {
+        $this->slogan = $slogan;
 
         return $this;
     }

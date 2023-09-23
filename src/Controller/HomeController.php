@@ -18,25 +18,26 @@ class HomeController extends AbstractController
         $paginator = $tricksRepository->getTrickPaginator($offset);
         if ($request->query->get('offset') === null) {
             return $this->render('tricks/index.html.twig', [
-                'user' => $this->getUser(),
-                'tricks' => $paginator,
-                'previous' => $offset - TricksRepository::PAGINATOR_PER_PAGE,
-                'next' => min(count($paginator), $offset + TricksRepository::PAGINATOR_PER_PAGE),
+                    'user' => $this->getUser(),
+                    'tricks' => $paginator,
+                    'previous' => $offset - TricksRepository::PAGINATOR_PER_PAGE,
+                    'next' => min(count($paginator), $offset + TricksRepository::PAGINATOR_PER_PAGE),
             ]);
         } else {
             $tricksData = [];
             foreach ($paginator as $trick) {
                 $tricksData[] = [
-                    'id' => $trick->getId(),
-                    'name' => $trick->getName(),
-                    'mainImageName' => $trick->getMainImageName()
+                        'id' => $trick->getId(),
+                        'name' => $trick->getName(),
+                        'slug' => $trick->getSlug(),
+                        'mainImageName' => $trick->getMainImageName()
                 ];
             }
             
             return new JsonResponse([
-                'tricks' => $tricksData,
-                'previous' => $offset - TricksRepository::PAGINATOR_PER_PAGE,
-                'next' => min(count($paginator), $offset + TricksRepository::PAGINATOR_PER_PAGE),
+                    'tricks' => $tricksData,
+                    'previous' => $offset - TricksRepository::PAGINATOR_PER_PAGE,
+                    'next' => min(count($paginator), $offset + TricksRepository::PAGINATOR_PER_PAGE),
             ]);
         }
     }

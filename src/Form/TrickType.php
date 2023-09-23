@@ -26,7 +26,7 @@ class TrickType extends AbstractType
                 ],
                 'label' => 'Nom du trick :'
             ])
-            ->add('slug', TextType::class, [
+            ->add('slogan', TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-2',
                     'placeholder' => 'décrire le trick en une phrase'

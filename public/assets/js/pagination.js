@@ -11,16 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const trickDiv = document.createElement('div');
                     trickDiv.classList.add('col', 'card', 'm-2', 'card-responsive');
                     trickDiv.innerHTML = `
-                        <a href="/tricks/single?id=${trick.id}">
+                        <a href="/tricks/single/${trick.slug}">
                             <img class="card-img-top home" src="/images/tricks/mini/300x300-${trick.mainImageName}" alt="">
                         </a>
                         <div class="card-body d-flex position-Srelative">
-                            <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/single?id=${trick.id}" target="_blank">${trick.name}</a>
+                            <a class="btn btn-outline-info btn-sm trick-link" href="/tricks/single?slug=${trick.slug}" target="_blank">${trick.name}</a>
                             <div class="position-absolute position-absolute end-0 m-2">
-                                <a href="/tricks/edition/${trick.id} " class="p-1">
+                                <a href="/tricks/edition/${trick.slug} " class="p-1">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </a>
-                                <a href="/path/to/delete/${trick.mainImageName}" class="p-1" data-delete data-token="${trick.csrfToken}">
+                                <a href="/tricks/delete/${trick.slug}" class="p-1" onclick="return confirm('etes-vous sur de vouloir supprimé le trick ?');">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </a>
                             </div>                                    
